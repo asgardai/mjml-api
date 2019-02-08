@@ -1,12 +1,17 @@
 const express = require('express');
 const mjml2html = require('mjml');
 const bodyParser = require('body-parser');
+const Sentry = require('@sentry/node');
+
+
+Sentry.init({ dsn: process.env.SENTRY_MJML_API_DSN });
 
 
 const app = express();
+// add sentry middleware
+app.use(Sentry.Handlers.requestHandler());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 
 app.post('/mjml2html', (req, res) => {
 
@@ -24,6 +29,9 @@ app.post('/mjml2html', (req, res) => {
     ...htmlOutput
   })
 });
+
+app.use(Sentry.Handlers.errorHandler());
+
 const PORT = 5000;
 
 app.listen(PORT, () => {
