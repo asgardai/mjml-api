@@ -10,8 +10,8 @@ Sentry.init({ dsn: process.env.SENTRY_MJML_API_DSN });
 const app = express();
 // add sentry middleware
 app.use(Sentry.Handlers.requestHandler());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.post('/mjml2html', (req, res) => {
 
